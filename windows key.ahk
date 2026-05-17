@@ -1,4 +1,13 @@
-﻿#Requires AutoHotkey v2.0
+﻿; Block Tab key when taskbar is focused
+Tab::HandleTab()
+
+HandleTab() {
+    if WinActive("ahk_class Shell_TrayWnd")
+        return
+    Send "{Tab}"
+}
+
+#Requires AutoHotkey v2.0
 #SingleInstance Force
 #UseHook
 DetectHiddenWindows True
