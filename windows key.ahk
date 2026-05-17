@@ -13,12 +13,26 @@ HandleTab() {
 DetectHiddenWindows True
 
 
-; Block the default action of the Win key to prevent the Start menu
-LWin::return
-RWin::return
+; Block the default action of the Win key ONLY if pressed alone (not with other keys)
+LWin::HandleLWinUp()
+    
+HandleLWinUp() {
+        KeyWait "LWin"
+    if (A_PriorKey = "LWin")
+        ToggleTaskbar()
+    return
+}
 
-LWin Up::HandleWinUp("LWin")
-RWin Up::HandleWinUp("RWin")
+RWin::HandleRWinUp()
+
+HandleRWinUp() {
+    KeyWait "RWin"
+    if (A_PriorKey = "RWin")
+        ToggleTaskbar()
+    return
+}
+
+; No longer needed, handled above
 
 HandleWinUp(key) {
     if (A_PriorKey = key)
@@ -42,6 +56,6 @@ ToggleTaskbar() {
     } else {
         for hwnd in taskbars
             WinShow "ahk_id " hwnd
-        WinActivate "ahk_id " main
+        ; Do not activate the taskbar to avoid auto-selecting tray icon
     }
 }
