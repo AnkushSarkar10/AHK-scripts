@@ -3,14 +3,13 @@
 #UseHook
 DetectHiddenWindows True
 
-; On Win down: inject a no-op virtual key in the same input sequence so
-; Windows treats Win as a modifier and doesn't open Start on release.
-~LWin::Send "{Blind}{vkE8}"
-~RWin::Send "{Blind}{vkE8}"
 
-; On Win up: if nothing else was pressed in between, toggle.
-~LWin Up::HandleWinUp("LWin")
-~RWin Up::HandleWinUp("RWin")
+; Block the default action of the Win key to prevent the Start menu
+LWin::return
+RWin::return
+
+LWin Up::HandleWinUp("LWin")
+RWin Up::HandleWinUp("RWin")
 
 HandleWinUp(key) {
     if (A_PriorKey = key)
