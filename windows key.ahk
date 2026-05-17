@@ -3,14 +3,18 @@
 #UseHook
 DetectHiddenWindows True
 
-HandleWin(key) {
-    ; fake keypress
-    Send "{Blind}{vkE8}"
+; On Win down: inject a no-op virtual key in the same input sequence so
+; Windows treats Win as a modifier and doesn't open Start on release.
+~LWin::Send "{Blind}{vkE8}"
+~RWin::Send "{Blind}{vkE8}"
 
-    ; only trigger when win key pressed by itself
-    if (A_PriorKey = key) {
+; On Win up: if nothing else was pressed in between, toggle.
+~LWin Up::HandleWinUp("LWin")
+~RWin Up::HandleWinUp("RWin")
+
+HandleWinUp(key) {
+    if (A_PriorKey = key)
         ToggleTaskbar()
-    }
 }
 
 ToggleTaskbar() {
@@ -18,28 +22,18 @@ ToggleTaskbar() {
     if !main
         return
 
-    ; bool
-    visible := WinGetStyle("ahk_id " main) & 0x10000000 
+    visible := WinGetStyle("ahk_id " main) & 0x10000000
 
-    ; get all taskbars (all monitors)
-    taskbars := []
-    taskbars.Push(main)
-
-    for hwnd in WinGetList("ahk_class Shell_SecondaryTrayWnd") {
+    taskbars := [main]
+    for hwnd in WinGetList("ahk_class Shell_SecondaryTrayWnd")
         taskbars.Push(hwnd)
-    }
 
-    ; toggle
     if visible {
-        for hwnd in taskbars {
+        for hwnd in taskbars
             WinHide "ahk_id " hwnd
-        }
     } else {
-        for hwnd in taskbars {
+        for hwnd in taskbars
             WinShow "ahk_id " hwnd
-        }
+        WinActivate "ahk_id " main
     }
-    
-    ; focus taskbar when shown
-    WinActivate "ahk_id " main
 }
