@@ -1,5 +1,5 @@
 ﻿; Block Tab key when taskbar is focused
-Tab::HandleTab()
+$Tab::HandleTab()
 
 HandleTab() {
     if WinActive("ahk_class Shell_TrayWnd")
@@ -12,33 +12,16 @@ HandleTab() {
 #UseHook
 DetectHiddenWindows True
 
-
-; Block the default action of the Win key ONLY if pressed alone (not with other keys)
-LWin::HandleLWinUp()
-    
-HandleLWinUp() {
-        KeyWait "LWin"
-    if (A_PriorKey = "LWin")
-        ToggleTaskbar()
-    return
-}
-
-RWin::HandleRWinUp()
-
-HandleRWinUp() {
-    KeyWait "RWin"
-    if (A_PriorKey = "RWin")
-        ToggleTaskbar()
-    return
-}
-
-; No longer needed, handled above
++LWin::return
++LWin UP::ToggleTaskbar()
 
 HandleWinUp(key) {
     if (A_PriorKey = key)
         ToggleTaskbar()
 }
 
+; Shell_SecondaryTrayWnd
+; Shell_TrayWnd
 ToggleTaskbar() {
     main := WinExist("ahk_class Shell_TrayWnd")
     if !main
