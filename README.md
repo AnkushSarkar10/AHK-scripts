@@ -1,0 +1,1 @@
+# Aouto hotkey scripts
