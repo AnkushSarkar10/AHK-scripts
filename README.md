@@ -1,1 +1,1 @@
-# Aouto hotkey scripts
+# Auto hotkey scripts
